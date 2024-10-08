@@ -1,15 +1,28 @@
 package storage
 
-import "strconv"
+import (
+  "strconv"
+  "go.uber.org/zap"
+)
 
 type Storage struct {
   data map[string]Data
+  log  *zap.Logger
 }
 
-func NewStorage() Storage {
-  return Storage {
-    data: make(map[string]Data),
+func NewStorage() (Storage, error) {
+  logger, err := zap.NewProduction()
+  if err != nil {
+    return Storage{}, err
   }
+  
+  defer logger.Sync()
+  logger.Info("New storage created")
+
+  return Storage {
+    data: make(map[string], Data),
+    log:  logger,
+  }, nil
 }
 
 func (st Storage) Set (key, val string) {
@@ -24,6 +37,9 @@ func (st Storage) Set (key, val string) {
   }
 
   st.data[key] = value
+
+  st.log.Info(fmt.Spritnf("New value [%s] to key [%s]", value, key), zap.Any())
+  st.log.Sync()
 }
 
 func (st Storage) Get (key string) *Data {
