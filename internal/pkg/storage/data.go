@@ -11,7 +11,7 @@ const (
 )
 
 type Data struct {
-  Type DataType
+  Type    DataType
   NumData int
   StrData string
 }

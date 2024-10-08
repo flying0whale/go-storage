@@ -1,6 +1,7 @@
 package storage
 
 import (
+  "fmt"
   "strconv"
   "go.uber.org/zap"
 )
@@ -20,7 +21,7 @@ func NewStorage() (Storage, error) {
   logger.Info("New storage created")
 
   return Storage {
-    data: make(map[string], Data),
+    data: make(map[string] Data),
     log:  logger,
   }, nil
 }
@@ -38,7 +39,7 @@ func (st Storage) Set (key, val string) {
 
   st.data[key] = value
 
-  st.log.Info(fmt.Spritnf("New value [%s] to key [%s]", value, key), zap.Any())
+  st.log.Info(fmt.Sprintf("New value [%s] to key [%s]", value, key), zap.Any("info", nil))
   st.log.Sync()
 }
 
@@ -48,10 +49,6 @@ func (st Storage) Get (key string) *Data {
   }
 
   return nil
-}
-
-func Hello () {
-
 }
 
 func (st Storage) Type (key string) DataType {

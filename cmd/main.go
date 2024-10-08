@@ -5,7 +5,12 @@ import (
 )
 
 func main() {
-  var st = storage.NewStorage()
+  var st, err = storage.NewStorage()
+  if err != nil {
+    fmt.Printf("Error occured: %s", err)
+    return
+  }
+
   st.Set("key", "value")
   st.Set("num", "23452")
 
